@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigo Bangladesh Ltd. - Employee Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e5799, #207cca);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header h2 {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .search-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #employeeId {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #employeeId:focus {
+            border-color: #1e5799;
+        }
+
+        #searchBtn {
+            padding: 12px 25px;
+            background-color: #1e5799;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #searchBtn:hover {
+            background-color: #16447a;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+            min-height: 24px;
+        }
+
+        .employee-details {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .placeholder {
+            padding: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .employee-card {
+            padding: 0;
+        }
+
+        .employee-header {
+            background: linear-gradient(135deg, #1e5799, #207cca);
+            color: white;
+            padding: 25px;
+        }
+
+        .employee-name {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .employee-id {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .employee-body {
+            padding: 25px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-group {
+            margin-bottom: 15px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #34495e;
+        }
+
+        .attendance-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .attendance-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e5799;
+            margin-bottom: 5px;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .punch-records {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .punch-day {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .day-date {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .punch-in, .punch-out {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .holiday, .weekend {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .workday {
+            color: #27ae60;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            #employeeId {
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+            
+            #searchBtn {
+                border-radius: 4px;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Amigo Bangladesh Ltd.</h1>
+            <h2>Employee Information System</h2>
+        </header>
+        
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="employeeId" placeholder="Enter Employee ID (e.g., 800006)" autocomplete="off">
+                <button id="searchBtn">Search</button>
+            </div>
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+        
+        <div id="employeeDetails" class="employee-details">
+            <div class="placeholder">
+                <p>Enter an Employee ID to search for details</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Employee data embedded in the JavaScript
+        const employeeData = {
+            "Sheet1": [
+                {
+                    "ID": "800006",
+                    "Name": " Surajit Kumar Barua ",
+                    "Designation": " Manager  ",
+                    "Department": " Human Resources ",
+                    "Unit": " HRD ",
+                    "Line": " HRD ",
+                    "Grade ": " M2 ",
+                    "Join date": "01-Oct-09",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Lokkhipura, Post: Lokkhipura- 1600, P.S: Raipura, Dist: Narsingdi",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "15",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800027",
+                    "Name": " Nazmul Islam Rafiq ",
+                    "Designation": " Senior Supervisor  ",
+                    "Department": " Value Added Process ",
+                    "Unit": " UNI ",
+                    "Line": " IE00 ",
+                    "Grade ": " O1 ",
+                    "Join date": "02-Sep-18",
+                    "Nature": " MOH Staff ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Chor Bhaghber, Post: Awalikanda-1640, P.S: Belabo, Dist: Narsingdi",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "16",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800030",
+                    "Name": " Md. Zakarul Islam (Zakaria) ",
+                    "Designation": " Senior Officer  ",
+                    "Department": " Finance ",
+                    "Unit": " FIN ",
+                    "Line": " FIN ",
+                    "Grade ": " O1 ",
+                    "Join date": "18-Nov-11",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Sohagi, Post: Essorgonj, P.S: Ishwarganj, Dist: Mymensingh",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "17",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800031",
+                    "Name": " Md. Zahidul Islam ",
+                    "Designation": " Officer  ",
+                    "Department": " Purchase ",
+                    "Unit": " PUR ",
+                    "Line": " PUR ",
+                    "Grade ": " O2 ",
+                    "Join date": "10-Jan-10",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Mamudpur, Post: Rajprosad-1630, P.S: Raipura, Dist: Narsingdi",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "18",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800032",
+                    "Name": " Md. Majharul Islam ",
+                    "Designation": " Officer  ",
+                    "Department": " Purchase ",
+                    "Unit": " PUR ",
+                    "Line": " PUR ",
+                    "Grade ": " O2 ",
+                    "Join date": "18-Feb-21",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Gabortola, Post: Rajtola-2480, P.S: Madan, Dist: Netrokona",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "19",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800034",
+                    "Name": " S. M. Jakir Hossain ",
+                    "Designation": " Senior Officer  ",
+                    "Department": " Finance ",
+                    "Unit": " FIN ",
+                    "Line": " FIN ",
+                    "Grade ": " O1 ",
+                    "Join date": "05-Apr-15",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Uttor Araibari, Post: Hossenpur-2320, P.S: Kishoreganj Sadar, Dist: Kishoreganj",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "20",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800035",
+                    "Name": " Md. Selim Reza ",
+                    "Designation": " Junior Officer  ",
+                    "Department": " Logistics ",
+                    "Unit": " LOG ",
+                    "Line": " LOG ",
+                    "Grade ": " O3 ",
+                    "Join date": "02-May-16",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Kuniya, Post: National University-1740, P.S: Gazipur Sadar, Dist: Gazipur",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "21",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800036",
+                    "Name": " Md. Fuad Hossain ",
+                    "Designation": " Junior Officer  ",
+                    "Department": " Logistics ",
+                    "Unit": " LOG ",
+                    "Line": " LOG ",
+                    "Grade ": " O3 ",
+                    "Join date": "03-Oct-15",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Horipur, Post: Jhonka Bazar-2210, P.S: Muktagacha, Dist: Mymensingh",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "22",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800037",
+                    "Name": " Md. Tarif Ahmed ",
+                    "Designation": " Senior Officer  ",
+                    "Department": " Logistics ",
+                    "Unit": " LOG ",
+                    "Line": " LOG ",
+                    "Grade ": " O1 ",
+                    "Join date": "11-May-19",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Fulhara, Post: Khaskaouliya-1930, P.S: Chauhali, Dist: Sirajganj",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "23",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800038",
+                    "Name": " Most. Nurzahan Begum ",
+                    "Designation": " Senior Clerk ",
+                    "Department": " Logistics ",
+                    "Unit": " LOG ",
+                    "Line": " LOG ",
+                    "Grade ": " C1 ",
+                    "Join date": "04-Mar-17",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " F ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: kutipara, Post: Tarai-6730, P.S: Belkuchi, Dist: Sirajganj",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "24",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800051",
+                    "Name": " Md. Aslam Uddin ",
+                    "Designation": " Officer  ",
+                    "Department": " Information Services ",
+                    "Unit": " ISD ",
+                    "Line": " ISD ",
+                    "Grade ": " O2 ",
+                    "Join date": "07-Dec-15",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Poschim chorkoronshi, Post: Gujadiya-2310, P.S: Karimganj, Dist: Kishoreganj",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "25",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800055",
+                    "Name": " Md. Surhab ",
+                    "Designation": " Cook ",
+                    "Department": " Administration ",
+                    "Unit": " ADM ",
+                    "Line": " ADG ",
+                    "Grade ": " C2 ",
+                    "Join date": "07-May-14",
+                    "Nature": " SGA Worker ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Sonda, Post: National University- 5130, P.S: Gazipur Sadar, Dist: Gazipur",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "26",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                },
+                {
+                    "ID": "800056",
+                    "Name": " Md. Emdadul Haque  ",
+                    "Designation": " Manager  ",
+                    "Department": " Finance ",
+                    "Unit": " FIN ",
+                    "Line": " FIN ",
+                    "Grade ": " M2 ",
+                    "Join date": "01-Jun-15",
+                    "Nature": " SGA Staff  ",
+                    "Gender": " M ",
+                    "Phone Number ": "01722",
+                    "Permanent Address": "Vill: Sabbisa, Post: Boholi- 6700, P.S: Sirajganj Sadar, Dist: Sirajganj",
+                    "Month ": "Oct-2025",
+                    "CL Balance": "10",
+                    "SL Balance": "14",
+                    "AL Balance": "18",
+                    "Total Late Minute": "27",
+                    "01-Oct  In Punch Record ": "08:01",
+                    "01-Oct  Out Punch Record ": "20:17",
+                    "02-Oct  In Punch Record ": "Holiday",
+                    "02-Oct  Out Punch Record ": "Holiday",
+                    "03-Oct  In Punch Record ": "Weekenday",
+                    "03-Oct  Out Punch Record ": "Weekenday",
+                    "04-Oct  In Punch Record ": "07:59",
+                    "04-Oct  Out Punch Record ": "17:20",
+                    "05-Oct  In Punch Record ": "07:59",
+                    "05-Oct  Out Punch Record ": "17:20",
+                    "06-Oct  In Punch Record ": "07:59",
+                    "06-Oct  Out Punch Record ": "17:20",
+                    "07-Oct  In Punch Record ": "07:59",
+                    "07-Oct  Out Punch Record ": "17:20",
+                    "08-Oct  In Punch Record ": "07:59",
+                    "08-Oct  Out Punch Record ": "17:20",
+                    "09-Oct  In Punch Record ": "07:59",
+                    "09-Oct  Out Punch Record ": "17:20",
+                    "10-Oct  In Punch Record ": "Weekenday",
+                    "10-Oct  Out Punch Record ": "Weekenday",
+                    "11-Oct  In Punch Record ": "Holiday",
+                    "11-Oct  Out Punch Record ": "Holiday",
+                    "12-Oct  In Punch Record ": "07:59",
+                    "12-Oct  Out Punch Record ": "17:20",
+                    "13-Oct  In Punch Record ": "07:59",
+                    "13-Oct  Out Punch Record ": "17:20",
+                    "14-Oct  In Punch Record ": "07:59",
+                    "14-Oct  Out Punch Record ": "17:20",
+                    "15-Oct  In Punch Record ": "07:59",
+                    "15-Oct  Out Punch Record ": "17:20",
+                    "Present": "6",
+                    "Absent": "1",
+                    "Leave": "2",
+                    "Hoilday": "2",
+                    "Last update date ": "15-Oct"
+                }
+            ]
+        };
+
+        // Employee Search Application
+        document.addEventListener('DOMContentLoaded', function() {
+            const employeeIdInput = document.getElementById('employeeId');
+            const searchBtn = document.getElementById('searchBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const employeeDetails = document.getElementById('employeeDetails');
+            
+            // Search functionality
+            searchBtn.addEventListener('click', searchEmployee);
+            employeeIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchEmployee();
+                }
+            });
+            
+            function searchEmployee() {
+                const id = employeeIdInput.value.trim();
+                
+                // Clear previous results and errors
+                clearError();
+                
+                // Validate input
+                if (!id) {
+                    showError('Please enter an Employee ID');
+                    return;
+                }
+                
+                // Find employee by ID
+                const employee = employeeData.Sheet1.find(emp => emp.ID === id);
+                
+                if (employee) {
+                    displayEmployeeDetails(employee);
+                } else {
+                    showError('Employee not found. Please check the ID and try again.');
+                    clearEmployeeDetails();
+                }
+            }
+            
+            function displayEmployeeDetails(employee) {
+                // Create employee card HTML
+                const employeeHTML = `
+                    <div class="employee-card">
+                        <div class="employee-header">
+                            <h2 class="employee-name">${employee.Name}</h2>
+                            <div class="employee-id">ID: ${employee.ID}</div>
+                        </div>
+                        
+                        <div class="employee-body">
+                            <div class="details-grid">
+                                <div class="detail-group">
+                                    <div class="detail-label">Designation</div>
+                                    <div class="detail-value">${employee.Designation}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Department</div>
+                                    <div class="detail-value">${employee.Department}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Unit</div>
+                                    <div class="detail-value">${employee.Unit}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Line</div>
+                                    <div class="detail-value">${employee.Line}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Grade</div>
+                                    <div class="detail-value">${employee['Grade ']}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Join Date</div>
+                                    <div class="detail-value">${employee['Join date']}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Nature</div>
+                                    <div class="detail-value">${employee.Nature}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Gender</div>
+                                    <div class="detail-value">${employee.Gender}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Phone Number</div>
+                                    <div class="detail-value">${employee['Phone Number ']}</div>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <div class="detail-label">Permanent Address</div>
+                                    <div class="detail-value">${employee['Permanent Address']}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="leave-balance">
+                                <h3 class="section-title">Leave Balance</h3>
+                                <div class="attendance-summary">
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee['CL Balance']}</div>
+                                        <div class="summary-label">CL Balance</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee['SL Balance']}</div>
+                                        <div class="summary-label">SL Balance</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee['AL Balance']}</div>
+                                        <div class="summary-label">AL Balance</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee['Total Late Minute']}</div>
+                                        <div class="summary-label">Late Minutes</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="attendance-section">
+                                <h3 class="section-title">Attendance Summary (${employee.Month})</h3>
+                                <div class="attendance-summary">
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee.Present}</div>
+                                        <div class="summary-label">Present</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee.Absent}</div>
+                                        <div class="summary-label">Absent</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee.Leave}</div>
+                                        <div class="summary-label">Leave</div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-value">${employee.Hoilday}</div>
+                                        <div class="summary-label">Holiday</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="punch-records-section">
+                                <h3 class="section-title">Punch Records</h3>
+                                <div class="punch-records">
+                                    ${generatePunchRecords(employee)}
+                                </div>
+                            </div>
+                            
+                            <div class="last-update">
+                                <p><strong>Last Updated:</strong> ${employee['Last update date ']}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                employeeDetails.innerHTML = employeeHTML;
+            }
+            
+            function generatePunchRecords(employee) {
+                let recordsHTML = '';
+                
+                // Generate records for each day (1-15 as per the data)
+                for (let day = 1; day <= 15; day++) {
+                    const dayStr = day.toString().padStart(2, '0');
+                    const inPunchKey = `${dayStr}-Oct  In Punch Record `;
+                    const outPunchKey = `${dayStr}-Oct  Out Punch Record `;
+                    
+                    const inPunch = employee[inPunchKey];
+                    const outPunch = employee[outPunchKey];
+                    
+                    let dayClass = 'workday';
+                    let displayText = '';
+                    
+                    if (inPunch === 'Holiday' || outPunch === 'Holiday') {
+                        dayClass = 'holiday';
+                        displayText = 'Holiday';
+                    } else if (inPunch === 'Weekenday' || outPunch === 'Weekenday') {
+                        dayClass = 'weekend';
+                        displayText = 'Weekend';
+                    } else {
+                        displayText = `${inPunch} - ${outPunch}`;
+                    }
+                    
+                    recordsHTML += `
+                        <div class="punch-day ${dayClass}">
+                            <div class="day-date">${dayStr}-Oct</div>
+                            <div class="punch-times">${displayText}</div>
+                        </div>
+                    `;
+                }
+                
+                return recordsHTML;
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+            }
+            
+            function clearError() {
+                errorMessage.textContent = '';
+            }
+            
+            function clearEmployeeDetails() {
+                employeeDetails.innerHTML = `
+                    <div class="placeholder">
+                        <p>Enter an Employee ID to search for details</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
